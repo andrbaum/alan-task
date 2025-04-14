@@ -80,8 +80,12 @@ lazy val root = (project in file("."))
   .settings(
     name := "alan-task",
     libraryDependencies ++= Seq()
-  ).aggregate(db)
+  ).aggregate()
 
+
+/**
+ * At the moment we will use in memory storage so there is no need to change anything here
+ * */
 lazy val db = (project in file("modules/db"))
   .settings(
     name := "alan-task-db",
@@ -90,6 +94,11 @@ lazy val db = (project in file("modules/db"))
   ).dependsOn()
 
 
+/**
+ * For core we will need whatever needed to define the model
+ * encoders and decoders for the model
+ * and test framework to check if the codecs work as we want
+ * */
 // Stores domain models used across all other modules
 lazy val core = (project in file("modules/core"))
   .settings(
@@ -104,6 +113,11 @@ lazy val core = (project in file("modules/core"))
  *  TODO
  * Task 2
  * - Implement new module and wire it with others. Explore other methods on a module provided from sbt
+ *
+ * The app module will be the place where the server , routes and config will be created.
+ *
+ *
+ *  Hint.2
  *
  * */
 lazy val app = ???

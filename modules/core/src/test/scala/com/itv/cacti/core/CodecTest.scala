@@ -18,6 +18,8 @@ import io.circe.syntax.EncoderOps
  * This is covered by this single tes already but it just for you to get familiar
  * with the waver test framework
  *
+ * Hint.3
+ *
  * */
 
 object CodecTest extends SimpleIOSuite {
