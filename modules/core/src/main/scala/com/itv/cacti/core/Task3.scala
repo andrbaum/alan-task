@@ -28,6 +28,8 @@ object Task3 {
    *  Experiment with the style of setting the structure up ,
    *  you can put everything in package object , or dedicated files , up to you!
    *
+   *  Compare Catalogue4s com.itv.cit.catalogue.model package with Producers-autha-api com.itv.producers.auth.domain package
+   *  for better understanding of the approach
    *
    *  Make sure that each model has a decoder and encoder !!
    *

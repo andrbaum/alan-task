@@ -5,6 +5,8 @@ import java.util.UUID
 object PokemonUtil {
 
   /**
+   * Task 3
+   *
    * Example Pokemon map.
    *
    * feel free to change it as you wish.

@@ -1,4 +1,4 @@
-/**
+/** START HERE
  *
  * build.sbt is the build defining file , no surprises here
  * Even though the syntax might look a little bit strange we are still writing Scala here
@@ -56,22 +56,29 @@ ThisBuild / organizationName := "ITV"
  * Task 1
  * We will need some library to start going.
  * Your task will be to wire the modules correctly and following dependencies
- *  - cats core
- *  - cats effect
- *  - circe literals
- *  - circe core
- *  - circe generics
- *  - ciris
- *  - http4s core
- *  - http4s-dsl
- *  - http4s-ember-server
- *  - http4s-circe
- *  - enumeratum
- *  - enumeratum circe
+ *  - cats core ( all )
+ *  - cats effect ( all )
+ *  - circe literals ( core )
+ *  - circe core ( core )
+ *  - circe generics ( core )
+ *  - ciris ( app )
+ *  - http4s core ( app )
+ *  - http4s-dsl ( app )
+ *  - http4s-ember-server ( app )
+ *  - http4s-circe ( app )
+ *  - enumeratum ( core )
+ *  - enumeratum circe ( core )
  *
  *  and weaver-cats fot tests ( Note , look how to define test libraries! There is a key word for that)
  *
- *  The dependencies are passed as a Seq to libraryDependencies settings field
+ *  The dependencies are passed as a Seq to libraryDependencies settings field and Seq can be combined!
+ *
+ *  Look at producers-api build file  , the dependencies dont have to be defined here but they cna be a separate object that
+ *  imported to the build which is cools but not necessary.
+ *
+ *  You cna define lazy val of Seq containing dependencies all module need
+ *  and then combine it where necessary to ket the code DRY
+ *
  * */
 
 
@@ -98,6 +105,10 @@ lazy val db = (project in file("modules/db"))
  * For core we will need whatever needed to define the model
  * encoders and decoders for the model
  * and test framework to check if the codecs work as we want
+ * There is already existing test suite under object CodecTest
+ * If it will compile it means the dependencies are alright.
+ *
+ * use "sbt compile" for that
  * */
 // Stores domain models used across all other modules
 lazy val core = (project in file("modules/core"))
