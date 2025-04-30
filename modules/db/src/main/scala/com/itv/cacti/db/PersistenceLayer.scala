@@ -1,5 +1,5 @@
 package com.itv.cacti.db
-import com.itv.cacti.core.Pokemon
+import com.itv.cacti.core.Task3.Pokemon
 
 import java.util.UUID
 
@@ -18,9 +18,11 @@ trait PersistenceLayer[F[_]] {
    * Pokemon should be a case class representing a Pokemon (name , description , type , level , skills ...)
    * */
 
+  case class PokemonNotFound(errorMessage: String) extends Throwable
+
   private type HappyPath = String
 
-  private type SadPath = Throwable
+  private type SadPath = PokemonNotFound
 
   def getById(id: UUID) : F[Pokemon]
 

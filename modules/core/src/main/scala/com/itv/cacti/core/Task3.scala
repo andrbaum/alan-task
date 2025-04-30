@@ -2,6 +2,7 @@ package com.itv.cacti.core
 
 import enumeratum.EnumEntry
 import enumeratum.Enum
+import io.circe._, io.circe.generic.semiauto._, io.circe.syntax._
 
 object Task3 {
 
@@ -58,15 +59,19 @@ object Task3 {
     * all
     */
 
-  case class Ability(name: String, damage: Int, `type`: PokemonType)
-
   case class Pokemon(
       name: String,
-      `type`: PokemonType,
+      `type`: List[PokemonType],
       description: String,
       level: Int,
-      abilities: Seq[Ability] = Seq.empty
+      abilities: List[Ability] = List.empty
   )
+
+  implicit val pokemonEncoder: io.circe.Encoder[Pokemon] =
+    deriveEncoder[Pokemon]
+
+  implicit val pokemonDecoder: io.circe.Decoder[Pokemon] =
+    deriveDecoder[Pokemon]
 
   sealed trait PokemonType extends EnumEntry
 
@@ -79,12 +84,17 @@ object Task3 {
     override def values: IndexedSeq[PokemonType] = findValues
   }
 
-  val pikachu = Pokemon(
-    "Pikachu",
-    PokemonType.Electric,
-    "Electric Mouse",
-    25,
-    Seq(Ability("Electro Shocks", 20, PokemonType.Electric))
-  )
+  implicit val pokemonTypeEncoder: io.circe.Encoder[PokemonType] =
+    deriveEncoder[PokemonType]
 
+  implicit val pokemonTypeDecoder: io.circe.Decoder[PokemonType] =
+    deriveDecoder[PokemonType]
+
+  case class Ability(name: String, damage: Int, `type`: PokemonType)
+
+  implicit val abilityEncoder: io.circe.Encoder[Ability] =
+    deriveEncoder[Ability]
+
+  implicit val abilityDecoder: io.circe.Decoder[Ability] =
+    deriveDecoder[Ability]
 }

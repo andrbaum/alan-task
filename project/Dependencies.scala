@@ -18,7 +18,8 @@ object Dependencies {
     circe.generic,
     circe.literal,
     enumeratum.core,
-    weaver.cats
+    weaver.cats,
+    jawn.core
   )
 
 
@@ -66,6 +67,10 @@ object Dependencies {
       lazy val discipline = org %% "weaver-discipline" % version % Test
 
       lazy val test = Seq(cats, scalacheck, discipline)
+    }
+
+    object jawn {
+      lazy val core = "org.typelevel" %% "jawn-parser" % "1.5.1"
     }
 
   }
