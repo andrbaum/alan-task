@@ -1,4 +1,5 @@
 package com.itv.cacti.db
+import com.itv.cacti.core.Pokemon
 
 import java.util.UUID
 
@@ -16,7 +17,6 @@ trait PersistenceLayer[F[_]] {
    * Type should be enumeration of Pokemon types using enumeratum
    * Pokemon should be a case class representing a Pokemon (name , description , type , level , skills ...)
    * */
-  private type Pokemon = String
 
   private type HappyPath = String
 
