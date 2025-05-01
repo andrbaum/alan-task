@@ -18,6 +18,7 @@ object Dependencies {
     circe.generic,
     circe.literal,
     enumeratum.core,
+    enumeratum.circe,
     weaver.cats,
     jawn.core
   )

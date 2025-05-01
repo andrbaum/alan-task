@@ -1,8 +1,5 @@
 package com.itv.cacti.core
 
-import enumeratum.EnumEntry
-import enumeratum.Enum
-import io.circe._, io.circe.generic.semiauto._, io.circe.syntax._
 
 object Task3 {
 
@@ -58,43 +55,4 @@ object Task3 {
     * look at it so we dont need to look at the implementation of the method at
     * all
     */
-
-  case class Pokemon(
-      name: String,
-      `type`: List[PokemonType],
-      description: String,
-      level: Int,
-      abilities: List[Ability] = List.empty
-  )
-
-  implicit val pokemonEncoder: io.circe.Encoder[Pokemon] =
-    deriveEncoder[Pokemon]
-
-  implicit val pokemonDecoder: io.circe.Decoder[Pokemon] =
-    deriveDecoder[Pokemon]
-
-  sealed trait PokemonType extends EnumEntry
-
-  object PokemonType extends Enum[PokemonType] {
-    case object Electric extends PokemonType
-    case object Fire extends PokemonType
-    case object Water extends PokemonType
-    case object Grass extends PokemonType
-
-    override def values: IndexedSeq[PokemonType] = findValues
-  }
-
-  implicit val pokemonTypeEncoder: io.circe.Encoder[PokemonType] =
-    deriveEncoder[PokemonType]
-
-  implicit val pokemonTypeDecoder: io.circe.Decoder[PokemonType] =
-    deriveDecoder[PokemonType]
-
-  case class Ability(name: String, damage: Int, `type`: PokemonType)
-
-  implicit val abilityEncoder: io.circe.Encoder[Ability] =
-    deriveEncoder[Ability]
-
-  implicit val abilityDecoder: io.circe.Decoder[Ability] =
-    deriveDecoder[Ability]
 }
