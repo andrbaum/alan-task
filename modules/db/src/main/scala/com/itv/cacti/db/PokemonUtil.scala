@@ -62,4 +62,5 @@ object PokemonUtil {
       List(Ability("Karate chop", 50, List(PokemonType.Fighting)))
     )
   )
+
 }
