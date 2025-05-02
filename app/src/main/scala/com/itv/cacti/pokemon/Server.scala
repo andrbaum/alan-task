@@ -6,7 +6,7 @@ import cats.effect.Resource
 object Server {
 
   def serve[F[_]](
-                                                ): Resource[F, ???] =
+                                                )= ???
     /**
      * Task 3
      *
