@@ -4,6 +4,7 @@ import cats.effect.IO
 import weaver.SimpleIOSuite
 import io.circe.literal.JsonStringContext
 import io.circe.syntax.EncoderOps
+import com.itv.cacti.core.Pokemon
 
 /**
  * TODO - Task 4
