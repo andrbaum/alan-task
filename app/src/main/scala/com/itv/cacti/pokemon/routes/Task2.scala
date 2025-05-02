@@ -12,7 +12,7 @@ object Task2 {
    *
    * - you want to define final class that will operate in context of some abstract F Hint.1
    * - define the class dependencies ( persistence layer in this case )
-   * - Bring Http4Dsl for the given F to the scope Hint.2
+   * - Bring Http4sDsl for the given F to the scope Hint.2
    * - define companion object with make function that returns an instance of PokemonRoutes
    *
    * Side note : the companion object might seem redundant , and it kind of is at this point but we will use this set up later
