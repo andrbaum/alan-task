@@ -8,20 +8,11 @@ import com.itv.cacti.core.PokemonName
 import com.itv.cacti.core.PokemonDescription
 import com.itv.cacti.core.PokemonLevel
 
+import scala.collection.mutable
+
 object PokemonUtil {
 
-  /** Task 3
-    *
-    * Example Pokemon map.
-    *
-    * feel free to change it as you wish.
-    *
-    * Note that if you will use wrappers for the member values ( and you should!
-    * ) and use enums for pokemon type this will look more like
-    * Pokemon(PokemonName("Pikachu"), Description("Electric mouse"),
-    * PokemonType.ElECTRIC, PokemonLevel(25) , etc ...)
-    */
-  val pokemonMap: Map[UUID, Pokemon] = Map(
+  val pokemonMap: mutable.Map[UUID, Pokemon] = mutable.Map(
     UUID.randomUUID() -> Pokemon(
       PokemonName("Pikachu"),
       PokemonDescription("Electric mouse"),
@@ -71,4 +62,5 @@ object PokemonUtil {
       List(Ability("Karate chop", 50, List(PokemonType.Fighting)))
     )
   )
+
 }

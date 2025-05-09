@@ -1,4 +1,5 @@
 package com.itv.cacti.core
+
 import io.circe._, io.circe.generic.semiauto._, io.circe.syntax._
 import com.itv.cacti.core.PokemonType
 
@@ -12,9 +13,7 @@ case class Pokemon(
 
 object Pokemon {
 
-  implicit val pokemonEncoder: io.circe.Encoder[Pokemon] =
-    deriveEncoder
+  implicit val pokemonEncoder: io.circe.Encoder[Pokemon] = deriveEncoder
 
-  implicit val pokemonDecoder: io.circe.Decoder[Pokemon] =
-    deriveDecoder
+  implicit val pokemonDecoder: io.circe.Decoder[Pokemon] = deriveDecoder
 }

@@ -21,14 +21,11 @@ after the task is completed. I wrote them in object rather than md file just out
 
 Hints:
 
-1. The capability you look for is Applicative. If F is an applicative it means it can wrap around other things
-so to tell Scala that your F can do that you need to define a type bound on the make function
-   def make[F[_] : Applicative]: PersistenceLayer[F] 
-This says that make can be called returning any effect that has Applicative capabilities 
-and then you can wrap the return type from Map using Applicative[F].pure(???).
 
-2. The changes in sbt wont be reflected in the project until you will read the build file. Turn on sbt in your terminal
- and use reload command. 
-
-3. To run tests use test sbt command. you Can also use testOnly for running just specific test suite. For now there is just
- one so the test command should be enough. 
+1. You need to find right set of capabilities for routes to work. The compiler should tell you which one it needs for the code
+to compile. Try to figure this out in that way , if stuck for more than an hours , let me know! 
+2. The Http4sDSL brings the syntax that lets you define routes. Given that it will also work within some
+abstract F , the bounds need to exist for this to work. There are many different way to bring th eDSL to scope like brinigng it
+via import to the whole scope. Imp the inheritance is clearer 
+3. Unapply method is what you are after! Apply lets you create something , unapply lets you try to create something.
+It is used by extracting parameters from URI 
