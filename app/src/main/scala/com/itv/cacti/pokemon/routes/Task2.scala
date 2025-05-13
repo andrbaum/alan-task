@@ -1,5 +1,20 @@
 package com.itv.cacti.pokemon.routes
 
+import io.circe._, io.circe.generic.semiauto._, io.circe.syntax._
+import cats.implicits._
+import cats.effect.IO
+import cats.Applicative
+import com.itv.cacti.db.PersistenceLayer
+import org.http4s.HttpRoutes
+import org.http4s.dsl.Http4sDsl
+import cats.syntax.applicative
+import cats.Monad
+import cats._
+import com.itv.cacti.core.Pokemon
+import java.util.UUID
+import org.http4s.circe._
+import org.http4s.EntityEncoder
+
 object Task2 {
 
   /** Task 2
@@ -54,5 +69,30 @@ object Task2 {
     *
     * https://http4s.org/v0.23/docs/quickstart.html
     */
+
+  final class PokemonService[F[_]: Monad](
+      implicit P: PersistenceLayer[F]
+  ) extends Http4sDsl[F] {
+
+    implicit val pokemonListEncoder: EntityEncoder[F, List[(UUID, Pokemon)]] =
+      jsonEncoderOf[F, List[(UUID, Pokemon)]]
+
+    def routes: HttpRoutes[F] =
+      HttpRoutes.of[F] { case GET -> Root / "v1" / "pokemon" =>
+        P.getAll.flatMap(Ok(_))
+      }
+
+  }
+
+  object PokemonService {
+
+    def make[F[_]: Monad](
+        persistenceLayer: PersistenceLayer[F]
+    ): PokemonService[F] = {
+      implicit val P: PersistenceLayer[F] = persistenceLayer
+      new PokemonService[F]
+    }
+
+  }
 
 }

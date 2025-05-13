@@ -1,6 +1,8 @@
 package com.itv.cacti.pokemon
 
 import cats.effect.{IO, Resource}
+import org.http4s.HttpRoutes
+import com.itv.cacti.db.PersistenceLayer
 
 trait App[F[_]] {
   def http: HttpRoutes[F]
@@ -33,6 +35,9 @@ object App {
       * Resource? E
       */
 
-    ???
+    for {
+      persistence <- IO[Resource[PersistenceLayer]]
+
+    } yield persistence
 
 }
