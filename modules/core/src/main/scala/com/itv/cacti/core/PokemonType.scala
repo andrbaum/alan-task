@@ -17,4 +17,8 @@ object PokemonType extends Enum[PokemonType] with CirceEnum[PokemonType] {
   case object Fighting extends PokemonType
 
   override def values: IndexedSeq[PokemonType] = findValues
+
+  def unapply(maybePokemonType: String): Option[PokemonType] =
+    PokemonType.withNameOption(maybePokemonType)
+
 }

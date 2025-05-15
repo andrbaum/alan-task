@@ -1,5 +1,28 @@
 package com.itv.cacti.pokemon.routes
 
+import io.circe._, io.circe.generic.semiauto._, io.circe.syntax._
+import io.circe._, io.circe.generic.semiauto._, io.circe.syntax._
+import cats.implicits._
+import cats.effect.IO
+import cats.effect.Concurrent
+import cats.Applicative
+import com.itv.cacti.db.PersistenceLayer
+import org.http4s.HttpRoutes
+import org.http4s.dsl.Http4sDsl
+import cats.syntax.applicative
+import cats.Monad
+import cats._
+import com.itv.cacti.core.Pokemon
+import java.util.UUID
+import org.http4s.circe._
+import org.http4s.EntityEncoder
+import com.itv.cacti.core.PokemonType
+import org.http4s.Response
+import org.http4s.Status
+import org.http4s.EntityDecoder
+import com.itv.cacti.core.PokemonLevel.decoder
+import com.itv.cacti.core.OperationStatus
+
 object Task2 {
 
   /** Task 2
@@ -54,5 +77,94 @@ object Task2 {
     *
     * https://http4s.org/v0.23/docs/quickstart.html
     */
+
+  final class PokemonRoutes[F[_]: Concurrent](
+      database: PersistenceLayer[F]
+  ) extends Http4sDsl[F] {
+
+    implicit val pokemonListEncoder: EntityEncoder[F, List[Pokemon]] =
+      jsonEncoderOf[F, List[Pokemon]]
+
+    implicit val pokemonListWithUUIDEncoder: EntityEncoder[F, List[
+      (UUID, Pokemon)
+    ]] = jsonEncoderOf[F, List[(UUID, Pokemon)]]
+
+    implicit val pokemonEncoder: EntityEncoder[F, Pokemon] =
+      jsonEncoderOf[F, Pokemon]
+
+    implicit val pokemonDecoder: EntityDecoder[F, Pokemon] = jsonOf[F, Pokemon]
+
+    def routes: HttpRoutes[F] =
+      HttpRoutes.of[F] {
+        case GET -> Root / "v1" / "pokemon" =>
+          database.getAll.flatMap(pokemonList =>
+            Monad[F].pure(
+              Response[F](
+                status = Status.Ok,
+                body = fs2.Stream(
+                  pokemonList
+                    .map(_.toString().toByte)
+                    .reduce((a, b) => a.combine(b))
+                )
+              )
+            )
+          )
+        case GET -> Root / "v1" / "pokemon" / PokemonType(pokemonType) =>
+          database
+            .getByType(pokemonType)
+            .flatMap(pokemonList => Ok(pokemonList))
+
+        case GET -> Root / "v1" / "pokemon" / UUIDVar(uuid) =>
+          database
+            .getById(uuid)
+            .flatMap(response =>
+              response match {
+                case Left(_)        => NotFound()
+                case Right(pokemon) => Ok(pokemon)
+              }
+            )
+
+        case req @ POST -> Root / "v1" / "pokemon" =>
+          for {
+            pokemon <- req.as[Pokemon]
+            id = UUID.randomUUID()
+            _        <- database.add(pokemon, id)
+            response <- Created(s"Pokemon added with ID: $id")
+          } yield response
+
+        case req @ PATCH -> Root / "v1" / "pokemon" / UUIDVar(id) =>
+          for {
+            pokemon <- req.as[Pokemon]
+            response <- database
+              .replace(pokemon, id)
+              .flatMap(response =>
+                response match {
+                  case Left(_)  => NotFound()
+                  case Right(_) => Ok()
+                }
+              )
+          } yield response
+
+        case DELETE -> root / "v1" / "pokemon" / UUIDVar(id) =>
+          database
+            .delete(id)
+            .flatMap(response =>
+              response match {
+                case Left(_)  => NotFound()
+                case Right(_) => Ok()
+              }
+            )
+
+      }
+
+  }
+
+  object PokemonRoutes {
+
+    def make[F[_]: Concurrent](
+        persistenceLayer: PersistenceLayer[F]
+    ): PokemonRoutes[F] = new PokemonRoutes[F](persistenceLayer)
+
+  }
 
 }
