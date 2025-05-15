@@ -145,7 +145,7 @@ object Task2 {
               )
           } yield response
 
-        case req @ DELETE -> root / "v1" / "pokemon" / UUIDVar(id) =>
+        case DELETE -> root / "v1" / "pokemon" / UUIDVar(id) =>
           database
             .delete(id)
             .flatMap(response =>
