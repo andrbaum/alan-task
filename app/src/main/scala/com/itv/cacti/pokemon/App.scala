@@ -37,7 +37,10 @@ object App {
       * Resource? E
       */
 
-     for {
-       db <- PersistenceLayer.make[IO]
-     } yield app
+    for {
+      db     <- Resource.pure(PersistenceLayer.make[IO])
+      routes <- Resource.pure(PokemonRoutes.make[IO](db))
+      app    <- Resource.pure(App(routes.routes))
+    } yield app
+
 }
