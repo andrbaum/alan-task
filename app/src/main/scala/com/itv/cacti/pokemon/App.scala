@@ -3,8 +3,7 @@ package com.itv.cacti.pokemon
 import cats.effect.{IO, Resource}
 import org.http4s.HttpRoutes
 import com.itv.cacti.db.PersistenceLayer
-import cats.Applicative
-import com.itv.cacti.pokemon.routes.Task2.PokemonRoutes
+import com.itv.cacti.pokemon.routes.PokemonRoutes
 
 trait App[F[_]] {
   def http: HttpRoutes[F]

@@ -15,6 +15,7 @@ object PokemonType extends Enum[PokemonType] with CirceEnum[PokemonType] {
   case object Normal   extends PokemonType
   case object Fairy    extends PokemonType
   case object Fighting extends PokemonType
+  case object Psychic  extends PokemonType
 
   override def values: IndexedSeq[PokemonType] = findValues
 
