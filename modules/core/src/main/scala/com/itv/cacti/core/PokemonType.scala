@@ -1,8 +1,8 @@
 package com.itv.cacti.core
 
-import enumeratum.EnumEntry
-import enumeratum.Enum
 import enumeratum.CirceEnum
+import enumeratum.Enum
+import enumeratum.EnumEntry
 
 sealed trait PokemonType extends EnumEntry
 

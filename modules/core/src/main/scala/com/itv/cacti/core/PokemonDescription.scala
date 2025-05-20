@@ -1,6 +1,6 @@
 package com.itv.cacti.core
 
-import io.circe._, io.circe.generic.semiauto._, io.circe.syntax._
+import io.circe._
 
 final case class PokemonDescription(description: String)
 

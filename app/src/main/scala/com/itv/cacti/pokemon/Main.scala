@@ -1,9 +1,11 @@
 package com.itv.cacti.pokemon
 
-import cats.effect.{ExitCode, IO, IOApp, Resource}
-import org.http4s.server.Server
-
+import cats.effect.ExitCode
+import cats.effect.IO
+import cats.effect.IOApp
+import cats.effect.Resource
 import fs2.Stream
+import org.http4s.server.Server
 
 object Main extends IOApp {
 

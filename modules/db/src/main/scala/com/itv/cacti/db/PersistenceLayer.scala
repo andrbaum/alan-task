@@ -1,10 +1,12 @@
 package com.itv.cacti.db
 
-import com.itv.cacti.core.{OperationStatus, Pokemon, PokemonType}
-import cats.implicits._
-
-import java.util.UUID
 import cats.Applicative
+import cats.implicits._
+import java.util.UUID
+
+import com.itv.cacti.core.OperationStatus
+import com.itv.cacti.core.Pokemon
+import com.itv.cacti.core.PokemonType
 
 trait PersistenceLayer[F[_]] {
 

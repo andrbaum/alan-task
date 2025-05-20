@@ -1,7 +1,8 @@
 package com.itv.cacti.core
 
-import enumeratum.{CirceEnum, EnumEntry}
+import enumeratum.CirceEnum
 import enumeratum.Enum
+import enumeratum.EnumEntry
 
 // This is just to represent the outcome of the computation , so we have something meaningfully to return
 

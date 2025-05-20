@@ -1,13 +1,11 @@
 package com.itv.cacti.core
 
 import cats.effect.IO
-import weaver.SimpleIOSuite
 import io.circe.literal.JsonStringContext
 import io.circe.syntax.EncoderOps
+import weaver.SimpleIOSuite
 
 object CodecTest extends SimpleIOSuite {
-
-
 
   test("Json -> Model -> Json") {
 
@@ -28,11 +26,10 @@ object CodecTest extends SimpleIOSuite {
       }
           """
 
-
     for {
       modelRepresentation <- IO.fromEither(json.as[Pokemon])
-      jsonRepresentation <- IO(modelRepresentation.asJson)
-    } yield expect( jsonRepresentation == json)
+      jsonRepresentation  <- IO(modelRepresentation.asJson)
+    } yield expect(jsonRepresentation == json)
 
   }
 

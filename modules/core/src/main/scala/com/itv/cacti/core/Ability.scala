@@ -1,6 +1,7 @@
 package com.itv.cacti.core
 
-import io.circe._, io.circe.generic.semiauto._, io.circe.syntax._
+import io.circe.generic.semiauto._
+
 import com.itv.cacti.core.PokemonType
 
 final case class Ability(name: String, damage: Int, `type`: List[PokemonType])

@@ -1,14 +1,14 @@
 package com.itv.cacti.db
 
 import java.util.UUID
-import com.itv.cacti.core.Pokemon
-import com.itv.cacti.core.PokemonType
+import scala.collection.mutable
+
 import com.itv.cacti.core.Ability
-import com.itv.cacti.core.PokemonName
+import com.itv.cacti.core.Pokemon
 import com.itv.cacti.core.PokemonDescription
 import com.itv.cacti.core.PokemonLevel
-
-import scala.collection.mutable
+import com.itv.cacti.core.PokemonName
+import com.itv.cacti.core.PokemonType
 
 object PokemonUtil {
 
