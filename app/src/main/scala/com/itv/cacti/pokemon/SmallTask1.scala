@@ -431,28 +431,28 @@ object SmallTask1 {
      * within the same context and we are golden!
      * */
 
-    // Block 10
-    val myIO_1: IO[Int] = IO {
-      println("Computing first number ... ")
-      Thread.sleep(1000)
-      5
-    }
-
-    // IO that should return an Int but actually fails
-    val myIO_2: IO[Int] = IO.raiseError[Int](new Throwable("Dang!"))
-
-
-    val result = for {
-      a <- myIO_1
-      b <- myIO_2.handleErrorWith(error => IO {
-        println(s"Got error = ${error}  but its cool! ")
-        Thread.sleep(1000)
-        5
-      })
-    } yield a + b
-
-
-    println(result.unsafeRunSync())
+//    // Block 10
+//    val myIO_1: IO[Int] = IO {
+//      println("Computing first number ... ")
+//      Thread.sleep(1000)
+//      5
+//    }
+//
+//    // IO that should return an Int but actually fails
+//    val myIO_2: IO[Int] = IO.raiseError[Int](new Throwable("Dang!"))
+//
+//
+//    val result = for {
+//      a <- myIO_1
+//      b <- myIO_2.handleErrorWith(error => IO {
+//        println(s"Got error = ${error}  but its cool! ")
+//        Thread.sleep(1000)
+//        5
+//      })
+//    } yield a + b
+//
+//
+//    println(result.unsafeRunSync())
 
 
   }
