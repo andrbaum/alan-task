@@ -26,11 +26,24 @@ lazy val root = (project in file("."))
   )
   .aggregate(core, db, app)
 
+/** Task 2
+  *
+  * We need to be able to interact with out PostgreSQL and for that we need to
+  * bring some more libraries
+  *
+  * Our weapon of choice will be Doobie https://typelevel.org/doobie/index.html
+  *
+  * Doobie provides a TTransactor object that facilitates the communication and
+  * lets us write SQL statements in Scala
+  *
+  * we will need doobie core , doobie postgre , doobie hikari ( implementation
+  * of transactor ) and doobie circe to use our decoders and encoder to write
+  * and read from the DB.
+  */
+
 lazy val db = (project in file("modules/db"))
   .settings(
     name := "alan-task-db",
-    libraryDependencies ++= Seq(
-    )
   )
   .dependsOn(core)
 
@@ -41,6 +54,14 @@ lazy val core = (project in file("modules/core"))
     libraryDependencies ++= coreDeps
   )
 
+/** Task 1
+  *
+  * We need Ciris to be able to read from the environment and build the config ,
+  * update the core deps to include it!
+  *
+  * Ciris is a standard library used to interact with he environment in which
+  * our app runs
+  */
 lazy val app = (project in file("app"))
   .settings(
     name := "alan-task-app",
