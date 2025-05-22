@@ -22,7 +22,7 @@ import com.itv.cacti.core.PokemonName
 import com.itv.cacti.core.PokemonType
 import com.itv.cacti.db.PersistenceLayer
 import com.itv.cacti.pokemon.routes.PokemonRoutes
-import com.itv.cacti.db.PokemonUtil.pokemonMap
+import com.itv.cacti.db._
 import java.util.UUID
 import com.itv.cacti.core.OperationStatus
 
@@ -180,14 +180,30 @@ object PokemonRoutesTest extends SimpleIOSuite {
   }
 
   test("GET request returns a list of pokemon") {
+    val uuid = UUID.randomUUID()
+    val pokemon = Pokemon.apply(
+      name = PokemonName("Mewtwo"),
+      description = PokemonDescription("Super rare , super powerful"),
+      `type` = List(PokemonType.Psychic),
+      level = PokemonLevel(999),
+      abilities = List.empty[Ability]
+    )
+
+    val persistanceStub = dbMock(mutable.Map[UUID, Pokemon] {
+      uuid -> pokemon
+    })
+
+    val httpApp: HttpApp[IO] =
+      PokemonRoutes.make[IO](persistanceStub).routes.orNotFound
+
     for {
       request <- IO.pure(
         Request[IO](method = GET, uri = uri"/v1/pokemon")
-          .withEntity(pokemonMap.asJson)
       )
 
       response <- httpApp.run(request)
-    } yield expect(response.status.code == 200)
+      body <- response.as[List[(UUID,Pokemon)]]
+    } yield expect(response.status.code == 200 && body == List[(UUID,Pokemon)]((uuid,pokemon)))
   }
 
   test("GET request returns a pokemon by id") {

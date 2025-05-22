@@ -2,12 +2,12 @@ package com.itv.cacti.pokemon
 
 import cats.effect.IO
 import cats.effect.Resource
-import doobie.hikari.HikariTransactor
+// import doobie.hikari.HikariTransactor
 import org.http4s.HttpRoutes
 
 import com.itv.cacti.db.Database
 import com.itv.cacti.db.PersistenceLayer
-import com.itv.cacti.pokemon.config.AppConfig
+// import com.itv.cacti.pokemon.config.AppConfig
 import com.itv.cacti.pokemon.routes.PokemonRoutes
 
 trait App[F[_]] {
