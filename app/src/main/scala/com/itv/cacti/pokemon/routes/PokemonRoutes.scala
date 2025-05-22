@@ -15,6 +15,7 @@ import org.http4s.dsl.Http4sDsl
 import com.itv.cacti.core.Pokemon
 import com.itv.cacti.core.PokemonType
 import com.itv.cacti.db.PersistenceLayer
+import cats.effect.IO
 
 final class PokemonRoutes[F[_]: Concurrent](
     database: PersistenceLayer[F]
@@ -35,18 +36,7 @@ final class PokemonRoutes[F[_]: Concurrent](
   def routes: HttpRoutes[F] =
     HttpRoutes.of[F] {
       case GET -> Root / "v1" / "pokemon" =>
-        database.getAll.flatMap(pokemonList =>
-          Monad[F].pure(
-            Response[F](
-              status = Status.Ok,
-              body = fs2.Stream(
-                pokemonList
-                  .map(_.toString().toByte)
-                  .reduce((a, b) => a.combine(b))
-              )
-            )
-          )
-        )
+        database.getAll.flatMap(pokemonList => Ok(pokemonList))
       case GET -> Root / "v1" / "pokemon" / PokemonType(pokemonType) =>
         database
           .getByType(pokemonType)

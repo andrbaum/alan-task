@@ -5,6 +5,7 @@ import cats.implicits._
 import java.util.UUID
 import scala.collection.mutable
 
+
 import com.itv.cacti.core._
 
 trait PersistenceLayer[F[_]] {

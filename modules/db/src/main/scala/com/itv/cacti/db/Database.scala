@@ -2,8 +2,8 @@ package com.itv.cacti.db
 
 import cats.effect.kernel.Async
 import cats.effect.kernel.Resource
-import doobie.ExecutionContexts
-import doobie.hikari.HikariTransactor
+// import doobie.ExecutionContexts
+// import doobie.hikari.HikariTransactor
 
 object Database {
 
@@ -16,14 +16,14 @@ object Database {
     * pass to HikariTransactor constructor
     */
 
-  def transactor[F[_]: Async](
-      host: String,
-      port: Int,
-      database: String,
-      username: String,
-      password: String
-  ): Resource[F, HikariTransactor[F]] = {
-    ???
-  }
-
+//   def transactor[F[_]: Async](
+//       host: String,
+//       port: Int,
+//       database: String,
+//       username: String,
+//       password: String
+//   ): Resource[F, HikariTransactor[F]] = {
+//     ???
+//   }
+//
 }

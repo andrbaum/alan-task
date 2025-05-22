@@ -7,7 +7,7 @@ import cats.effect.Resource
 import fs2.Stream
 import org.http4s.server.Server
 
-import com.itv.cacti.pokemon.config.AppConfig
+// import com.itv.cacti.pokemon.config.AppConfig
 
 object Main extends IOApp {
 
