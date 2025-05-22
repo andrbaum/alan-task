@@ -7,6 +7,7 @@ import java.util.UUID
 import com.itv.cacti.core.OperationStatus
 import com.itv.cacti.core.Pokemon
 import com.itv.cacti.core.PokemonType
+import cats.effect.IO
 
 trait PersistenceLayer[F[_]] {
 
