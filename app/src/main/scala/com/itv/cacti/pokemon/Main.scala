@@ -21,7 +21,7 @@ object Main extends IOApp {
 
     val server: Resource[IO, Server] =
       for {
-        app    <- App.mainIO()
+        app    <- App.mainIO(config = ???)
         server <- Server.serve[IO](app.http)
       } yield server
 

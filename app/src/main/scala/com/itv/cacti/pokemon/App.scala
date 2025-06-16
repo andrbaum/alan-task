@@ -2,7 +2,7 @@ package com.itv.cacti.pokemon
 
 import cats.effect.IO
 import cats.effect.Resource
-import doobie.hikari.HikariTransactor
+// import doobie.hikari.HikariTransactor
 import org.http4s.HttpRoutes
 
 import com.itv.cacti.db.Database
@@ -30,7 +30,7 @@ object App {
 
   def mainIO(config: AppConfig): Resource[IO, App[IO]] =
     for {
-      db     <- Resource.pure(Database(config))
+      db     <- Resource.pure(???)
       routes <- Resource.pure(PokemonRoutes.make[IO](db))
       app    <- Resource.pure(App(routes.routes))
     } yield app
