@@ -2,12 +2,12 @@ package com.itv.cacti.pokemon
 
 import cats.effect.IO
 import cats.effect.Resource
-// import doobie.hikari.HikariTransactor
+import doobie.hikari.HikariTransactor
 import org.http4s.HttpRoutes
 
 import com.itv.cacti.db.Database
-import com.itv.cacti.db.PersistenceLayer
-// import com.itv.cacti.pokemon.config.AppConfig
+// import com.itv.cacti.db.PersistenceLayer
+import com.itv.cacti.pokemon.config.AppConfig
 import com.itv.cacti.pokemon.routes.PokemonRoutes
 
 trait App[F[_]] {
@@ -28,9 +28,9 @@ object App {
     * an argument so we can use in our constructors
     */
 
-  def mainIO(): Resource[IO, App[IO]] =
+  def mainIO(config: AppConfig): Resource[IO, App[IO]] =
     for {
-      db     <- Resource.pure(PersistenceLayer.make[IO])
+      db     <- Resource.pure(Database(config))
       routes <- Resource.pure(PokemonRoutes.make[IO](db))
       app    <- Resource.pure(App(routes.routes))
     } yield app
