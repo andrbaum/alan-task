@@ -5,8 +5,8 @@ import cats.implicits._
 import java.util.UUID
 import scala.collection.mutable
 
-
 import com.itv.cacti.core._
+import doobie.hikari.HikariTransactor
 
 trait PersistenceLayer[F[_]] {
 
@@ -140,6 +140,11 @@ object PersistenceLayer {
             PokemonNotFound("Could not delete, not found")
           )
         }
+
+    }
+
+  def make[F[_]: Applicative](transactor: HikariTransactor[F]): PersistenceLayer[F] =
+      
 
     }
 
