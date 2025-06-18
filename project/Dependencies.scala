@@ -29,10 +29,16 @@ object Dependencies {
     doobie.core,
     doobie.hikari,
     doobie.postgres,
-    typesafeConfig.core
+    typesafeConfig.core,
+    pureConfig.core
   )
 
   object Modules {
+
+    object pureConfig {
+      val core = "com.github.pureconfig" %% "pureconfig" % "0.17.7"
+
+    }
 
     object cats {
       val core    = "org.typelevel" %% "cats-core"   % "2.9.0"
