@@ -36,7 +36,7 @@ object App {
         config.username,
         config.password
       )
-      repository <- PersistenceLayer[IO].make(db)
+      repository <- Resource.pure(PersistenceLayer.make[IO](db))
       routes     <- Resource.pure(PokemonRoutes.make[IO](repository))
       app        <- Resource.pure(App(routes.routes))
     } yield app

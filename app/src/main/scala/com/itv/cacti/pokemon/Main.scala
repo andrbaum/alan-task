@@ -6,6 +6,7 @@ import cats.effect.IOApp
 import cats.effect.Resource
 import fs2.Stream
 import org.http4s.server.Server
+import com.itv.cacti.pokemon.config.AppConfig
 
 // import com.itv.cacti.pokemon.config.AppConfig
 
@@ -18,10 +19,11 @@ object Main extends IOApp {
       * Given we have our Config defined we need to load it and pass in the
       * right place
       */
-
+    val config = AppConfig.Load[IO]
     val server: Resource[IO, Server] =
       for {
-        app    <- App.mainIO(config = ???)
+        conf   <- Resource.eval(config)
+        app    <- App.mainIO(conf)
         server <- Server.serve[IO](app.http)
       } yield server
 

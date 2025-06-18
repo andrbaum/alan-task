@@ -29,7 +29,7 @@ object Dependencies {
     doobie.core,
     doobie.hikari,
     doobie.postgres,
-    typesafeConfig.core
+    typesafeConfig.core,
   )
 
   object Modules {
