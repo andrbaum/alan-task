@@ -24,7 +24,12 @@ object Dependencies {
     http4s.core,
     http4s.dsl,
     http4s.circe,
-    http4s.emberServer
+    http4s.emberServer,
+    ciris.core,
+    doobie.core,
+    doobie.hikari,
+    doobie.postgres,
+    typesafeConfig.core
   )
 
   object Modules {
@@ -76,6 +81,20 @@ object Dependencies {
 
     object jawn {
       lazy val core = "org.typelevel" %% "jawn-parser" % "1.5.1"
+    }
+
+    object ciris {
+      val core = "is.cir" %% "ciris" % "3.8.0"
+    }
+
+    object doobie {
+      val core     = "org.tpolecat" %% "doobie-core"     % "1.0.0-RC8"
+      val hikari   = "org.tpolecat" %% "doobie-hikari"   % "1.0.0-RC8"
+      val postgres = "org.tpolecat" %% "doobie-postgres" % "1.0.0-RC8"
+    }
+
+    object typesafeConfig {
+      val core = "com.typesafe" % "config" % "1.4.3"
     }
 
   }
