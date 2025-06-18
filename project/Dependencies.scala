@@ -30,10 +30,15 @@ object Dependencies {
     doobie.hikari,
     doobie.postgres,
     typesafeConfig.core,
-    pureConfig.core
+    pureConfig.core,
+    flyway.core
   )
 
   object Modules {
+
+    object flyway {
+      val core = "org.flywaydb" % "flyway-core" % "9.22.3"
+    }
 
     object pureConfig {
       val core = "com.github.pureconfig" %% "pureconfig" % "0.17.7"
