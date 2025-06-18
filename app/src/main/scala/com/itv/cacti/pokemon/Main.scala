@@ -17,7 +17,7 @@ object Main extends IOApp {
       for {
         conf   <- AppConfig.Load[IO].toResource
         app    <- App.mainIO(conf)
-        server <- Server.serve[IO](app.http)
+        server <- Server.serve[IO](app.http, conf.serverConfig)
       } yield server
 
     val serverStream = Stream.resource(server).evalMap(_ => IO.never)

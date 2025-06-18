@@ -24,11 +24,11 @@ object App {
   def mainIO(config: AppConfig): Resource[IO, App[IO]] =
     for {
       db <- Database.transactor[IO](
-        config.host,
-        config.port,
-        config.database,
-        config.username,
-        config.password
+        config.databaseConfig.host,
+        config.databaseConfig.port,
+        config.databaseConfig.database,
+        config.databaseConfig.username,
+        config.databaseConfig.password
       )
       repository <- Resource.pure(PersistenceLayer.make[IO](db))
       routes     <- Resource.pure(PokemonRoutes.make[IO](repository))

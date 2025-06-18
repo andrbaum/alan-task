@@ -1,28 +1,24 @@
 package com.itv.cacti.pokemon.config
 
 import cats.Applicative
-import com.typesafe.config.ConfigFactory
+import cats.syntax.applicative._
+import pureconfig._
+import pureconfig.generic.auto._
 
 case class AppConfig(
-    host: String,
-    port: Int,
-    database: String,
-    username: String,
-    password: String
+    databaseConfig: DatabaseConfig,
+    serverConfig: ServerConfig
 )
 
 object AppConfig {
 
   def Load[F[_]: Applicative]: F[AppConfig] = {
-    val config           = ConfigFactory.load()
-    val host: String     = config.getString("app.host")
-    val port: Int        = config.getInt("app.port")
-    val database: String = config.getString("app.database")
-    val username: String = config.getString("app.username")
-    val password: String = config.getString("app.password")
-
-    Applicative[F].pure {
-      AppConfig(host, port, database, username, password)
+    ConfigSource.default.load[AppConfig] match {
+      case Right(config) => config.pure[F]
+      case Left(errors) =>
+        throw new RuntimeException(
+          s"Configuration loading failed: ${errors.toList.mkString(", ")}"
+        )
     }
   }
 
