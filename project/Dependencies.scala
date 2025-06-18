@@ -37,7 +37,7 @@ object Dependencies {
   object Modules {
 
     object flyway {
-      val core = "org.flywaydb" % "flyway-core" % "11.9.1"
+      val core = "org.flywaydb" % "flyway-core" % "9.22.3"
     }
 
     object pureConfig {

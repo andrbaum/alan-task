@@ -13,7 +13,9 @@ object Migrations {
         Async[F].blocking(
           Flyway
             .configure()
+            .table("schema_version")
             .dataSource(dataSource)
+            .locations("migrations")
             .load()
         )
       }

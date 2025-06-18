@@ -4,7 +4,6 @@ import cats.effect.kernel.Async
 import cats.effect.kernel.Resource
 import com.comcast.ip4s.Host
 import com.comcast.ip4s.Port
-import doobie.ExecutionContexts
 import doobie.hikari.HikariTransactor
 import scala.concurrent.ExecutionContext
 
@@ -13,26 +12,6 @@ import com.itv.cacti.core.Secret
 object Database {
 
   def transactor[F[_]: Async](
-      host: Host,
-      port: Port,
-      database: String,
-      username: String,
-      password: Secret[String]
-  ): Resource[F, HikariTransactor[F]] = {
-    for {
-      connectEc <- ExecutionContexts.fixedThreadPool[F](10)
-      xa <- transactor[F](
-        host,
-        port,
-        database,
-        username,
-        password,
-        connectEc
-      )
-    } yield xa
-  }
-
-  protected[db] def transactor[F[_]: Async](
       host: Host,
       port: Port,
       database: String,
