@@ -1,7 +1,7 @@
 package com.itv.cacti.pokemon.config
 
-import com.typesafe.config.ConfigFactory
 import cats.Applicative
+import com.typesafe.config.ConfigFactory
 
 case class AppConfig(
     host: String,

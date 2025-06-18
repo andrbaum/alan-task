@@ -43,7 +43,7 @@ lazy val root = (project in file("."))
 
 lazy val db = (project in file("modules/db"))
   .settings(
-    name := "alan-task-db",
+    name := "alan-task-db"
   )
   .dependsOn(core)
 

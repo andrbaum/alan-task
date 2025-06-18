@@ -1,21 +1,17 @@
 package com.itv.cacti.pokemon.routes
 
-import cats.Monad
 import cats.effect.Concurrent
 import cats.implicits._
 import java.util.UUID
 import org.http4s.EntityDecoder
 import org.http4s.EntityEncoder
 import org.http4s.HttpRoutes
-import org.http4s.Response
-import org.http4s.Status
 import org.http4s.circe._
 import org.http4s.dsl.Http4sDsl
 
 import com.itv.cacti.core.Pokemon
 import com.itv.cacti.core.PokemonType
 import com.itv.cacti.db.PersistenceLayer
-import cats.effect.IO
 
 final class PokemonRoutes[F[_]: Concurrent](
     database: PersistenceLayer[F]
@@ -64,7 +60,7 @@ final class PokemonRoutes[F[_]: Concurrent](
           response <- Created(s"Pokemon added with ID: $id")
         } yield response).attempt.flatMap {
           case Right(res) => res.pure[F]
-          case Left(e) =>
+          case Left(e)    =>
             // Log the error if needed
             InternalServerError(s"Failed to add Pokemon: ${e.getMessage}")
         }
