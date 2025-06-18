@@ -11,10 +11,10 @@ import org.http4s.dsl.Http4sDsl
 
 import com.itv.cacti.core.Pokemon
 import com.itv.cacti.core.PokemonType
-import com.itv.cacti.db.PersistenceLayer
+import com.itv.cacti.db.PokemonRepo
 
 final class PokemonRoutes[F[_]: Concurrent](
-    database: PersistenceLayer[F]
+    database: PokemonRepo[F]
 ) extends Http4sDsl[F] {
 
   implicit val pokemonListEncoder: EntityEncoder[F, List[Pokemon]] =
@@ -91,7 +91,7 @@ final class PokemonRoutes[F[_]: Concurrent](
 object PokemonRoutes {
 
   def make[F[_]: Concurrent](
-      persistenceLayer: PersistenceLayer[F]
+      persistenceLayer: PokemonRepo[F]
   ): PokemonRoutes[F] = new PokemonRoutes[F](persistenceLayer)
 
 }

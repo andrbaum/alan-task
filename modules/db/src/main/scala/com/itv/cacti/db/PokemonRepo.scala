@@ -6,7 +6,7 @@ import java.util.UUID
 
 import com.itv.cacti.core._
 
-trait PersistenceLayer[F[_]] {
+trait PokemonRepo[F[_]] {
 
   case class PokemonNotFound(errorMessage: String) extends Throwable
 
@@ -26,12 +26,14 @@ trait PersistenceLayer[F[_]] {
   def delete(id: UUID): F[Either[PokemonNotFound, OperationStatus]]
 }
 
-object PersistenceLayer {
+object PokemonRepo {
+
+  import PokemonSql._
 
   def make[F[_]: cats.effect.kernel.MonadCancelThrow](
       transactor: HikariTransactor[F]
-  ): PersistenceLayer[F] =
-    new PersistenceLayer[F] {
+  ): PokemonRepo[F] =
+    new PokemonRepo[F] {
 
       import doobie.implicits._
       import doobie.postgres.implicits._

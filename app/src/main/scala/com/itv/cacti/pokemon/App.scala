@@ -10,6 +10,7 @@ import org.http4s.HttpRoutes
 import com.itv.cacti.db.Database
 import com.itv.cacti.db.Migrations
 import com.itv.cacti.db.PersistenceLayer
+import com.itv.cacti.db.PokemonRepo
 import com.itv.cacti.pokemon.config.AppConfig
 import com.itv.cacti.pokemon.config.DatabaseConfig
 import com.itv.cacti.pokemon.routes.PokemonRoutes

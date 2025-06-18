@@ -20,13 +20,13 @@ import com.itv.cacti.core.PokemonDescription
 import com.itv.cacti.core.PokemonLevel
 import com.itv.cacti.core.PokemonName
 import com.itv.cacti.core.PokemonType
-import com.itv.cacti.db.PersistenceLayer
+import com.itv.cacti.db.PokemonRepo
 import com.itv.cacti.pokemon.routes.PokemonRoutes
 
 object PokemonRoutesTest extends SimpleIOSuite {
 
   def dbMock(pokemonMap: mutable.Map[UUID, Pokemon]) =
-    new PersistenceLayer[IO] {
+    new PokemonRepo[IO] {
 
       override def getById(id: UUID): IO[Either[PokemonNotFound, Pokemon]] =
         IO.pure(
