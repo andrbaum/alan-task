@@ -9,7 +9,6 @@ import org.http4s.HttpRoutes
 
 import com.itv.cacti.db.Database
 import com.itv.cacti.db.Migrations
-import com.itv.cacti.db.PersistenceLayer
 import com.itv.cacti.db.PokemonRepo
 import com.itv.cacti.pokemon.config.AppConfig
 import com.itv.cacti.pokemon.config.DatabaseConfig
@@ -33,7 +32,7 @@ object App {
         config.databaseConfig
       )
       _          <- Migrations.run(xa).toResource
-      repository <- Resource.pure(PersistenceLayer.make[IO](xa))
+      repository <- Resource.pure(PokemonRepo.make[IO](xa))
       routes     <- Resource.pure(PokemonRoutes.make[IO](repository))
       app        <- Resource.pure(App(routes.routes))
     } yield app
