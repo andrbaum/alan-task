@@ -5,6 +5,10 @@ import doobie.hikari.HikariTransactor
 import java.util.UUID
 
 import com.itv.cacti.core._
+import com.itv.cacti.db.PokemonSql.getPokemonById
+import com.itv.cacti.db.PokemonSql.getPokemonAbilitiesByPokemonId
+import com.itv.cacti.db.PokemonSql.PokemonCoreInfo
+import com.itv.cacti.db.PokemonSql.PokemonAbilityInfo
 
 trait PokemonRepo[F[_]] {
 
@@ -33,7 +37,17 @@ object PokemonRepo {
   ): PokemonRepo[F] =
     new PokemonRepo[F] {
 
-      def getById(id: UUID): F[Either[PokemonNotFound, Pokemon]] = ???
+      def getById(id: UUID): F[Either[PokemonNotFound, Pokemon]] = {
+        val pokemon: Pokemon =
+          for {
+            pokemon <- getPokemonById(id)
+            pokemonAbilities <-
+              getPokemonAbilitiesByPokemonId[PokemonAbilityInfo](id)
+            abilties <- getPokemonAbilitiesByAbilityId(
+              pokemonAbilities.abilityId
+            )
+          } yield Pokemon(pokemon)
+      }
 
       /**   1. Get the Pokemon basic info per uuid from Pokemon table - If
         *      missing , then PokemonNotFound 2. Get all ability ID for that

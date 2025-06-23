@@ -48,6 +48,17 @@ object PokemonSql {
       level: PokemonLevel
   )
 
+  case class PokemonAbilityInfo(
+      pokemonId: UUID,
+      abilityId: UUID
+  )
+
+  case class AbilityInfo(
+      id: UUID,
+      name: String,
+      damage: Int
+  )
+
   def getPokemonById(pokemonId: UUID): ConnectionIO[Option[PokemonCoreInfo]] = {
     sql"""
     SELECT id, name, description, level
@@ -56,6 +67,32 @@ object PokemonSql {
   """
       .query[PokemonCoreInfo]
       .option
+
+  }
+
+  def getPokemonAbilitiesByPokemonId(
+      pokemonId: UUID
+  ): ConnectionIO[Option[List[PokemonAbilityInfo]]] = {
+    sql"""
+    SELECT ability_id
+    FROM pokemon_ability
+    WHERE pokemon_id = $pokemonId
+    """
+      .query[List[PokemonAbilityInfo]]
+      .option
+  }
+
+  def getPokemonAbilitiesByAbilityId(
+      abilityIds: List[UUID]
+  ): ConnectionIO[Option[List[AbilityInfo]]] = {
+    sql"""
+    SELECT id, name, damage
+    FROM pokemon_ability
+    WHERE id IN (${abilityIds.mkString(",")})
+    """
+      .query[AbilityInfo]
+      .to[List]
+      .map(Some(_))
   }
 
   /** So we have small query that returns information from one table only and
@@ -93,10 +130,8 @@ object PokemonSql {
     * If we want to this query we call .transact method on ConnectionIO , pass
     * HikariTransactor as an argument and we are DONE!
     *
-    * Now lets look into
-    *
-    * 2 . Get all ability ID for that UUID (pokemon_id) from pokemon_ability
-    * table
+    * Now lets look into 2 . Get all ability ID for that UUID (pokemon_id) from
+    * pokemon_ability table
     *
     * And that where you take the wheel! We will stay in the db module for now.
     * The intermediate case classes are only relevant in the db module scope ,
