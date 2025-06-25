@@ -107,6 +107,19 @@ object PokemonSql {
       .to[List]
   }
 
+  def getPokemonTypeByAbilityId(
+      abilityId: UUID
+  ): ConnectionIO[List[PokemonType]] = {
+    sql"""
+    SELECT type
+    FROM ability_type_link
+    WHERE abilityId = $abilityId
+    """
+      .query[PokemonType]
+      .to[List]
+  }
+
+
   /** So we have small query that returns information from one table only and
     * queries it directly into our case class using .query method
     *

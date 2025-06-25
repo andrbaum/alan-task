@@ -14,6 +14,7 @@ import com.itv.cacti.db.PokemonSql.getPokemonAbilitiesByAbilityId
 import cats.free.Free
 import doobie.free.connection.ConnectionOp
 import com.itv.cacti.db.PokemonSql.AbilityInfo
+import com.itv.cacti.db.PokemonSql.getPokemonTypeByPokemonId
 
 trait PokemonRepo[F[_]] {
 
@@ -49,32 +50,25 @@ object PokemonRepo {
             case None =>
               Applicative[F].pure(Left(PokemonNotFound("Pokemon Not Found")))
             case Some(pokemonInfo) =>
-              val pokemonAbilities: Free[ConnectionOp, List[AbilityInfo]] =
+              val result: Free[ConnectionOp, Pokemon] =
                 for {
                   pokemonAbilities <- getPokemonAbilitiesByPokemonId(id)
+                  pokemonType      <- getPokemonTypeByPokemonId(id)
                   abilities <- getPokemonAbilitiesByAbilityId(
                     pokemonAbilities
                       .map(pokemonAbility => pokemonAbility.abilityId)
                   )
-                } yield abilities
+                } yield Pokemon(
+                  pokemonInfo.name,
+                  pokemonInfo.description,
+                  `type` = pokemonType,
+                  pokemonInfo.level,
+                  abilities
+                )
 
-              val rightValue = pokemonAbilities.transact(transactor).map {
-                abilities =>
-                  Pokemon(
-                    pokemonInfo.name,
-                    pokemonInfo.description,
-                    `type` = ???,
-                    pokemonInfo.level,
-                    abilities.map(ability =>
-                      Ability(
-                        ability.name,
-                        ability.damage,
-                        `type` = List.empty[PokemonType]
-                      )
-                    )
-                  )
-              }
-              rightValue.flatMap(pokemon => Applicative[F].pure(Right(pokemon)))
+              result
+                .transact(transactor)
+                .flatMap(pokemon => Applicative[F].pure(Right(pokemon)))
 
           }
         }
