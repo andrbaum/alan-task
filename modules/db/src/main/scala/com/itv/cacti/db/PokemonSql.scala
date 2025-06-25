@@ -72,19 +72,19 @@ object PokemonSql {
 
   def getPokemonAbilitiesByPokemonId(
       pokemonId: UUID
-  ): ConnectionIO[Option[List[PokemonAbilityInfo]]] = {
+  ): ConnectionIO[List[PokemonAbilityInfo]] = {
     sql"""
     SELECT ability_id
     FROM pokemon_ability
     WHERE pokemon_id = $pokemonId
     """
-      .query[List[PokemonAbilityInfo]]
-      .option
+      .query[PokemonAbilityInfo]
+      .to[List]
   }
 
   def getPokemonAbilitiesByAbilityId(
       abilityIds: List[UUID]
-  ): ConnectionIO[Option[List[AbilityInfo]]] = {
+  ): ConnectionIO[List[AbilityInfo]] = {
     sql"""
     SELECT id, name, damage
     FROM pokemon_ability
@@ -92,7 +92,6 @@ object PokemonSql {
     """
       .query[AbilityInfo]
       .to[List]
-      .map(Some(_))
   }
 
   /** So we have small query that returns information from one table only and

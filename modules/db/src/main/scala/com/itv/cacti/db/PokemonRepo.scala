@@ -9,6 +9,13 @@ import com.itv.cacti.db.PokemonSql.getPokemonById
 import com.itv.cacti.db.PokemonSql.getPokemonAbilitiesByPokemonId
 import com.itv.cacti.db.PokemonSql.PokemonCoreInfo
 import com.itv.cacti.db.PokemonSql.PokemonAbilityInfo
+import doobie._
+import doobie.implicits._
+import cats.implicits._
+import com.itv.cacti.db.PokemonSql.getPokemonAbilitiesByAbilityId
+import cats.free.Free
+import doobie.free.connection.ConnectionOp
+import com.itv.cacti.db.PokemonSql.AbilityInfo
 
 trait PokemonRepo[F[_]] {
 
@@ -38,15 +45,41 @@ object PokemonRepo {
     new PokemonRepo[F] {
 
       def getById(id: UUID): F[Either[PokemonNotFound, Pokemon]] = {
-        val pokemon: Pokemon =
-          for {
-            pokemon <- getPokemonById(id)
-            pokemonAbilities <-
-              getPokemonAbilitiesByPokemonId[PokemonAbilityInfo](id)
-            abilties <- getPokemonAbilitiesByAbilityId(
-              pokemonAbilities.abilityId
-            )
-          } yield Pokemon(pokemon)
+        getPokemonById(id).transact(transactor).map { x =>
+          x match {
+            case None => Left(PokemonNotFound("Pokemon Not Found"))
+            case Some(pokemonInfo) =>
+              val pokemonAbilities: Free[ConnectionOp, List[AbilityInfo]] =
+                for {
+                  pokemonAbilities <- getPokemonAbilitiesByPokemonId(id)
+                  abilities <- getPokemonAbilitiesByAbilityId(
+                    pokemonAbilities
+                      .map(pokemonAbility => pokemonAbility.abilityId)
+                  )
+                } yield abilities
+
+              Right(pokemonAbilities.transact(transactor).map {
+                val ab = pokemonAbilities.map(
+                  _.map(ability =>
+                    Ability(
+                      ability.name,
+                      ability.damage,
+                      `type` = ??? // We need to fetch types for each ability
+                    )
+                  )
+                ).transact(transactor)
+
+                Pokemon.apply(
+                  pokemonInfo.name,
+                  pokemonInfo.description,
+                  `type` = ???,
+                  pokemonInfo.level,
+                  abilities = List.empty // We will fill this later with abilities
+                )
+              })
+
+          }
+        }
       }
 
       /**   1. Get the Pokemon basic info per uuid from Pokemon table - If
