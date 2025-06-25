@@ -7,8 +7,6 @@ import java.util.UUID
 import com.itv.cacti.core._
 import com.itv.cacti.db.PokemonSql.getPokemonById
 import com.itv.cacti.db.PokemonSql.getPokemonAbilitiesByPokemonId
-import com.itv.cacti.db.PokemonSql.PokemonCoreInfo
-import com.itv.cacti.db.PokemonSql.PokemonAbilityInfo
 import doobie._
 import doobie.implicits._
 import cats.implicits._
@@ -43,11 +41,13 @@ object PokemonRepo {
       transactor: HikariTransactor[F]
   ): PokemonRepo[F] =
     new PokemonRepo[F] {
+      import cats.Applicative
 
       def getById(id: UUID): F[Either[PokemonNotFound, Pokemon]] = {
-        getPokemonById(id).transact(transactor).map { x =>
+        getPokemonById(id).transact(transactor).flatMap { x =>
           x match {
-            case None => Left(PokemonNotFound("Pokemon Not Found"))
+            case None =>
+              Applicative[F].pure(Left(PokemonNotFound("Pokemon Not Found")))
             case Some(pokemonInfo) =>
               val pokemonAbilities: Free[ConnectionOp, List[AbilityInfo]] =
                 for {
@@ -58,25 +58,23 @@ object PokemonRepo {
                   )
                 } yield abilities
 
-              Right(pokemonAbilities.transact(transactor).map {
-                val ab = pokemonAbilities.map(
-                  _.map(ability =>
-                    Ability(
-                      ability.name,
-                      ability.damage,
-                      `type` = ??? // We need to fetch types for each ability
+              val rightValue = pokemonAbilities.transact(transactor).map {
+                abilities =>
+                  Pokemon(
+                    pokemonInfo.name,
+                    pokemonInfo.description,
+                    `type` = ???,
+                    pokemonInfo.level,
+                    abilities.map(ability =>
+                      Ability(
+                        ability.name,
+                        ability.damage,
+                        `type` = List.empty[PokemonType]
+                      )
                     )
                   )
-                ).transact(transactor)
-
-                Pokemon.apply(
-                  pokemonInfo.name,
-                  pokemonInfo.description,
-                  `type` = ???,
-                  pokemonInfo.level,
-                  abilities = List.empty // We will fill this later with abilities
-                )
-              })
+              }
+              rightValue.flatMap(pokemon => Applicative[F].pure(Right(pokemon)))
 
           }
         }

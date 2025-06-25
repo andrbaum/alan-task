@@ -8,6 +8,7 @@ import java.util.UUID
 import com.itv.cacti.core.PokemonDescription
 import com.itv.cacti.core.PokemonLevel
 import com.itv.cacti.core.PokemonName
+import com.itv.cacti.core.PokemonType
 
 object PokemonSql {
 
@@ -91,6 +92,18 @@ object PokemonSql {
     WHERE id IN (${abilityIds.mkString(",")})
     """
       .query[AbilityInfo]
+      .to[List]
+  }
+
+  def getPokemonTypeByPokemonId(
+      pokemonId: UUID
+  ): ConnectionIO[List[PokemonType]] = {
+    sql"""
+    SELECT type
+    FROM pokemon_type_link
+    WHERE pokemon_id = $pokemonId
+    """
+      .query[PokemonType]
       .to[List]
   }
 
