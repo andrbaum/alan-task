@@ -15,6 +15,7 @@ import cats.free.Free
 import doobie.free.connection.ConnectionOp
 import com.itv.cacti.db.PokemonSql.AbilityInfo
 import com.itv.cacti.db.PokemonSql.getPokemonTypeByPokemonId
+import com.itv.cacti.db.PokemonSql.getPokemonTypeByAbilityId
 
 trait PokemonRepo[F[_]] {
 
@@ -54,10 +55,25 @@ object PokemonRepo {
                 for {
                   pokemonAbilities <- getPokemonAbilitiesByPokemonId(id)
                   pokemonType      <- getPokemonTypeByPokemonId(id)
-                  abilities <- getPokemonAbilitiesByAbilityId(
-                    pokemonAbilities
-                      .map(pokemonAbility => pokemonAbility.abilityId)
-                  )
+                  abilities <-
+                    for {
+                      abilityInfos <- getPokemonAbilitiesByAbilityId(
+                        pokemonAbilities
+                          .map(_.abilityId)
+                      )
+                      abilities <- abilityInfos
+                        .traverse { abilityInfo =>
+                          getPokemonTypeByAbilityId(abilityInfo.id).map {
+                            types =>
+                              Ability(
+                                abilityInfo.name,
+                                abilityInfo.damage,
+                                types
+                              )
+                          }
+                        }
+
+                    } yield abilities
                 } yield Pokemon(
                   pokemonInfo.name,
                   pokemonInfo.description,
